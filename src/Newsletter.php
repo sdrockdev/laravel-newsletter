@@ -38,11 +38,11 @@ class Newsletter
     {
         $response = $this->subscribeOrUpdate($email, $mergeFields, $listName, $options);
 
-        if ( $response !== false ) {
+        if ($response !== false) {
             return $response;
         }
 
-        if ( ! $this->isAComplianceStateError( $this->getLastError() ) ) {
+        if (! $this->isAComplianceStateError($this->getLastError())) {
             return false;
         }
 
@@ -53,7 +53,7 @@ class Newsletter
 
     public function isAComplianceStateError($error): bool
     {
-        return ( strpos( $error, 'is in a compliance state due to unsubscribe, bounce, or compliance review and cannot be subscribed' ) !== false );
+        return (strpos($error, 'is in a compliance state due to unsubscribe, bounce, or compliance review and cannot be subscribed') !== false);
     }
 
 
