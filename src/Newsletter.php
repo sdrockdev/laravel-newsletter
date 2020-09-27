@@ -34,6 +34,29 @@ class Newsletter
         return $response;
     }
 
+    public function smartSubscribe(string $email, array $mergeFields = [], string $listName = '', array $options = [])
+    {
+        $response = $this->subscribeOrUpdate($email, $mergeFields, $listName, $options);
+
+        if ( $response !== false ) {
+            return $response;
+        }
+
+        if ( ! $this->isAComplianceStateError( $this->getLastError() ) ) {
+            return false;
+        }
+
+        $options = array_merge($options, ['status' => 'pending']);
+
+        return $this->subscribeOrUpdate($email, $mergeFields, $listName, $options);
+    }
+
+    public function isAComplianceStateError($error): bool
+    {
+        return ( strpos( $error, 'is in a compliance state due to unsubscribe, bounce, or compliance review and cannot be subscribed' ) !== false );
+    }
+
+
     public function subscribePending(string $email, array $mergeFields = [], string $listName = '', array $options = [])
     {
         $options = array_merge($options, ['status' => 'pending']);
